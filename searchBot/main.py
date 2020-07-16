@@ -46,3 +46,17 @@ for k in sites.copy():
 
 print(listaPreco)
 print(f"Sites usados: {sites}")
+
+# <---------------------||-------------------->
+# Tudo aqui em baixo é temporario
+
+arquivo = open(r"./listamuitoboa.txt", "w+")
+
+for i in range(len(listaPreco)):
+    arquivo.write(f"""Site: Kabum
+Preço: R$ {listaPreco[i]}
+Link: {sites[i]}
+
+""")
+
+arquivo.close()
