@@ -1,15 +1,3 @@
-def escrever(a, lp, bs, st, ds):
-    a.write(f"Busca realizada: {bs}\n\n")
-
-    for i in range(len(lp)):
-        for k, v in ds.items():
-            if v in st[i]:
-                a.write(f"""Site: {k}
-Preço: R$ {lp[i]}
-Link: {st[i]}
-
-""")
-
 def sitesFuncionais(links, sites):
     sitesUsados = []
 
@@ -29,9 +17,11 @@ def pegarPreco(links, dictSites, tree):
             if not precoAdquirido:
                 precoAdquirido = tree.xpath("//div[@class = 'preco_antigo-cm']/text()")
 
+            precoAdquirido = ''.join(precoAdquirido)
+
             return precoAdquirido
 
-        elif dictSites['Mercado Livre'] in i:
+        elif dictSites['Mercado Livre 1'] or dictSites['Mercado Livre 2'] in i:
             precoFloat = []
 
             precoAdquirido = tree.xpath("//span[@class = 'price-tag-fraction']/text()")

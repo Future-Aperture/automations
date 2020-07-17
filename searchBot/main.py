@@ -8,7 +8,7 @@ import requests, re, functions
 listaPreco = [] # Preços
 sites = [] # Sites que serão usados
 regex = re.compile(r"(\d|\d\d|\d\d\d|\d.\d\d\d|\d\d.\d\d\d),\d\d") # Filtro dos preços
-dictSites = {'Mercado Livre': 'produto.mercadolivre.com.br', 'Kabum': 'kabum.com.br'}
+dictSites = {'Mercado Livre 1': 'produto.mercadolivre.com.br','Mercado Livre 2': 'www.mercadolivre.com.br', 'Kabum': 'kabum.com.br'}
 
 # <---------------------||-------------------->
 
@@ -26,10 +26,9 @@ for k in sites.copy():
 
     precoAdquirido = functions.pegarPreco(sites, dictSites, tree)
 
-    print(precoAdquirido)
     if precoAdquirido:
         preco = regex.search(precoAdquirido).group()
-        listaPreco.append(precoAdquirido)
+        listaPreco.append(preco)
 
     else:
         sites.remove(k)
@@ -44,6 +43,15 @@ print(f"Sites usados: {sites}")
 
 arquivo = open(".\\listamuitoboa.txt", "w+")
 
-functions.escrever(arquivo, listaPreco, busca, sites, dictSites)
+arquivo.write(f"Busca realizada: {busca}\n\n")
+
+for i in range(len(listaPreco)):
+    for k, v in dictSites.items():
+        if v in sites[i]:
+            arquivo.write(f"""Site: {k}
+Preço: R$ {listaPreco[i]}
+Link: {sites[i]}
+
+""")
 
 arquivo.close()
