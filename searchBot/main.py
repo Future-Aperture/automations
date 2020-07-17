@@ -9,7 +9,7 @@ import re
 listaPreco = [] # Preços
 sites = [] # Sites que serão usados
 precoAdquirido = [] # lxml.etree - arquivos que contém o preço
-regex = re.compile(r"(\d\d|\d\d\d|\d.\d\d\d|\d\d.\d\d\d),\d\d") # Filtro dos preços
+regex = re.compile(r"(\d|\d\d|\d\d\d|\d.\d\d\d|\d\d.\d\d\d),\d\d") # Filtro dos preços
 
 
 # <---------------------||-------------------->
@@ -35,6 +35,7 @@ for k in sites.copy():
 
     preco = ''.join(precoAdquirido)
 
+    print(preco)
     if preco and precoAdquirido:
         preco = regex.search(preco).group()
         listaPreco.append(preco)
@@ -51,7 +52,7 @@ print(f"Sites usados: {sites}")
 # <---------------------||-------------------->
 # Tudo aqui em baixo é temporario
 
-arquivo = open(r"./listamuitoboa.txt", "w+")
+arquivo = open("./listamuitoboa.txt", "w+")
 
 arquivo.write(f"Busca realizada: {busca}\n\n")
 
