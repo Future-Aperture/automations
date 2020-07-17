@@ -11,6 +11,7 @@ sites = [] # Sites que serão usados
 precoAdquirido = [] # lxml.etree - arquivos que contém o preço
 regex = re.compile(r"(\d\d|\d\d\d|\d.\d\d\d|\d\d.\d\d\d),\d\d") # Filtro dos preços
 
+
 # <---------------------||-------------------->
 
 busca = input("Digite o que você quer buscar:\n> ")
@@ -51,6 +52,8 @@ print(f"Sites usados: {sites}")
 # Tudo aqui em baixo é temporario
 
 arquivo = open(r"./listamuitoboa.txt", "w+")
+
+arquivo.write(f"Busca realizada: {busca}\n\n")
 
 for i in range(len(listaPreco)):
     arquivo.write(f"""Site: Kabum
