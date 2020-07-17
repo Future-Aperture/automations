@@ -10,7 +10,7 @@ div#titulo {
     text-align: center;
     padding-top: 10px;
     margin: auto;
-    color: #2f5bbb;
+    color: #1e569e;
     border-radius: 16px;
     padding-bottom: 6%;
 }
@@ -45,4 +45,12 @@ div#res {
     
     margin-left: 50px;
     
+}
+
+section{
+    margin-top: 60px;
+}
+
+p {
+    margin-top: 100px;
 }
