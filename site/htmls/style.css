@@ -1,0 +1,48 @@
+
+
+body {
+    font: normal 20pt 'Times New Roman';
+    background-color: #77c9c4;
+    /* background-color: #091921; */
+}
+
+div#titulo {
+    text-align: center;
+    padding-top: 10px;
+    margin: auto;
+    color: #2f5bbb;
+    border-radius: 16px;
+    padding-bottom: 6%;
+}
+
+
+input#pesquisa {
+    padding: 4px;
+    width: 25%;
+    border-radius: 4px;
+    background-color: wheat;
+    font-size: medium;
+    margin-left: 10px;
+    background-color: whitesmoke;
+    cursor: text;
+}
+
+label {
+    margin-left: 50px;
+    
+}
+
+input {
+    padding: 6px;
+    border-radius: 6px;
+    outline: none;
+    inline-size: auto;
+    background-color: wheat;
+    cursor: pointer;
+}
+
+div#res {
+    
+    margin-left: 50px;
+    
+}
