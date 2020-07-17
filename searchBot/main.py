@@ -41,7 +41,6 @@ for k in sites.copy():
     else:
         sites.remove(k)
 
-
 # <---------------------||-------------------->
 
 print(listaPreco)
