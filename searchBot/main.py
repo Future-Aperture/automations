@@ -1,16 +1,14 @@
 from lxml import html
 from googlesearch import search
-import requests
-import re
+import requests, re, functions
 
 
 # <---------------------||-------------------->
 
 listaPreco = [] # Preços
 sites = [] # Sites que serão usados
-precoAdquirido = [] # lxml.etree - arquivos que contém o preço
 regex = re.compile(r"(\d|\d\d|\d\d\d|\d.\d\d\d|\d\d.\d\d\d),\d\d") # Filtro dos preços
-
+dictSites = {'Mercado Livre': 'produto.mercadolivre.com.br', 'Kabum': 'kabum.com.br'}
 
 # <---------------------||-------------------->
 
@@ -18,9 +16,7 @@ busca = input("Digite o que você quer buscar:\n> ")
 
 links = search(busca, num = 10, start = 0, stop = 10, pause = 2)
 
-for j in links:
-    if 'www.kabum.com.br' in j:
-        sites.append(j)
+sites = functions.sitesFuncionais(links, dictSites)
 
 # <---------------------||-------------------->
 
@@ -28,17 +24,12 @@ for k in sites.copy():
     page = requests.get(k)
     tree = html.fromstring(page.content)
 
-    precoAdquirido = tree.xpath("//div[@class = 'preco_normal']/text()")
+    precoAdquirido = functions.pegarPreco(sites, dictSites, tree)
 
-    if not precoAdquirido:
-        precoAdquirido = tree.xpath("//div[@class = 'preco_antigo-cm']/text()")
-
-    preco = ''.join(precoAdquirido)
-
-    print(preco)
-    if preco and precoAdquirido:
-        preco = regex.search(preco).group()
-        listaPreco.append(preco)
+    print(precoAdquirido)
+    if precoAdquirido:
+        preco = regex.search(precoAdquirido).group()
+        listaPreco.append(precoAdquirido)
 
     else:
         sites.remove(k)
@@ -51,15 +42,8 @@ print(f"Sites usados: {sites}")
 # <---------------------||-------------------->
 # Tudo aqui em baixo é temporario
 
-arquivo = open("./listamuitoboa.txt", "w+")
+arquivo = open(".\\listamuitoboa.txt", "w+")
 
-arquivo.write(f"Busca realizada: {busca}\n\n")
-
-for i in range(len(listaPreco)):
-    arquivo.write(f"""Site: Kabum
-Preço: R$ {listaPreco[i]}
-Link: {sites[i]}
-
-""")
+functions.escrever(arquivo, listaPreco, busca, sites, dictSites)
 
 arquivo.close()
