@@ -2,13 +2,15 @@ from lxml import html
 from googlesearch import search
 import requests, re, functions
 
-
 # <---------------------||-------------------->
 
 listaPreco = [] # Preços
 sites = [] # Sites que serão usados
-regex = re.compile(r"(\d|\d\d|\d\d\d|\d.\d\d\d|\d\d.\d\d\d),\d\d") # Filtro dos preços
-dictSites = {'Mercado Livre 1': 'produto.mercadolivre.com.br','Mercado Livre 2': 'www.mercadolivre.com.br', 'Kabum': 'kabum.com.br'}
+dictSites = {   'Mercado Livre 1': 'produto.mercadolivre.com.br',
+                'Mercado Livre 2': 'www.mercadolivre.com.br',
+                'Mercado Livre 3': 'lista.mercadolivre.com.br',
+                'Mercado Livre 4': 'informatica.mercadolivre.com.br',
+                'Kabum': 'kabum.com.br'}
 
 # <---------------------||-------------------->
 
@@ -24,14 +26,11 @@ for k in sites.copy():
     page = requests.get(k)
     tree = html.fromstring(page.content)
 
-    precoAdquirido = functions.pegarPreco(sites, dictSites, tree)
+    precos, linques = functions.pegarPreco(sites, dictSites, tree)
 
-    if precoAdquirido:
-        preco = regex.search(precoAdquirido).group()
-        listaPreco.append(preco)
+    print(precoAdquirido)
 
-    else:
-        sites.remove(k)
+
 
 # <---------------------||-------------------->
 
