@@ -45,7 +45,7 @@ arquivo.write(f"Busca realizada: {busca}\n\n")
 for p in range(len(todosPreco)):
     for i in range(len(todosPreco[p])):
         arquivo.write(f"""Site: Mercado Livre
-Preço: R$ {todosPreco[p][i]}
+Preço: R$ {str(todosPreco[p][i]).replace(".", ",")}
 Link: {todosLinks[p][i]}
 
 """)
