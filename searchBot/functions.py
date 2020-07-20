@@ -79,7 +79,8 @@ def mercadolivre(links, dictSites):
                     mlSites = tree.xpath("//a[@class = 'item-link item__js-link']")
                     
                     for pinto in mlSites:
-                        fodase.append(pinto.attrib['href'])
+                        if pinto not in fodase:
+                            fodase.append(pinto.attrib['href'])
 
                     for i in fodase:
                         page2 = requests.get(i)
