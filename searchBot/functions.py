@@ -1,6 +1,8 @@
 from lxml import html
 import requests, re
 
+# <---------------------| Sites Válidos |-------------------->
+
 def sitesFuncionais(links, sites):
     sitesUsados = []
 
@@ -10,9 +12,6 @@ def sitesFuncionais(links, sites):
                 sitesUsados.append(j)
     
     return sitesUsados
-
-# <---------------------||-------------------->
-
 
 # <---------------------| Kabum |-------------------->
 
@@ -48,7 +47,6 @@ def kabum(links, dictSites):
                 # Add o valor e link pra uma lista
                 mKabum.append(valor)
                 sKabum.append(i)
-
 
     # Retorna a lista de preços e sites
     return mKabum, sKabum
@@ -100,5 +98,4 @@ def mercadolivre(links, dictSites):
 
                             mML.append(precoFloat + (int(cents[0]) / 100))
 
-        print("executando...")
     return mML, sML
