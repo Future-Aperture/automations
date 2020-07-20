@@ -10,7 +10,8 @@ dictSites = {   'Mercado Livre 1': 'produto.mercadolivre.com.br',
                 'Mercado Livre 2': 'www.mercadolivre.com.br',
                 'Mercado Livre 3': 'lista.mercadolivre.com.br',
                 'Mercado Livre 4': 'informatica.mercadolivre.com.br',
-                'Kabum': 'kabum.com.br'}
+                'Mercado Livre 5': 'loja.mercadolivre.com.br',
+                'Kabum': 'www.kabum.com.br'}
 
 # <---------------------||-------------------->
 
@@ -22,20 +23,17 @@ sites = functions.sitesFuncionais(links, dictSites)
 
 # <---------------------||-------------------->
 
-for k in sites.copy():
-    page = requests.get(k)
-    tree = html.fromstring(page.content)
-
-    precos, linques = functions.pegarPreco(sites, dictSites, tree)
-
-    print(precoAdquirido)
+pKabum, lKabum = functions.kabum(sites, dictSites)
+pML, lML = functions.mercadolivre(sites, dictSites)
 
 
+todosPreco = (pKabum, pML)
+todosLinks = (lKabum, lML)
+# <---------------------| Debug |-------------------->
 
-# <---------------------||-------------------->
-
-print(listaPreco)
-print(f"Sites usados: {sites}")
+# print(pML)
+# print(lML)
+print("DEU CERTO!!!!!!!!!!!!!!!")
 
 # <---------------------||-------------------->
 # Tudo aqui em baixo é temporario
@@ -44,13 +42,13 @@ arquivo = open(".\\listamuitoboa.txt", "w+")
 
 arquivo.write(f"Busca realizada: {busca}\n\n")
 
-for i in range(len(listaPreco)):
-    for k, v in dictSites.items():
-        if v in sites[i]:
-            arquivo.write(f"""Site: {k}
-Preço: R$ {listaPreco[i]}
-Link: {sites[i]}
+for p in range(len(todosPreco)):
+    for i in range(len(todosPreco[p])):
+        arquivo.write(f"""Site: Mercado Livre
+Preço: R$ {todosPreco[p][i]}
+Link: {todosLinks[p][i]}
 
 """)
 
 arquivo.close()
+
