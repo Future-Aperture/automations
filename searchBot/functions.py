@@ -45,7 +45,7 @@ def kabum(links, dictSites):
                 valor = float(preco.replace(".", "").replace(",", "."))
                 
                 # Add o valor e link pra uma lista
-                mKabum.append(f"{valor:2f}")
+                mKabum.append(f"{valor:.2f}")
                 sKabum.append(i)
 
     # Retorna a lista de preços e sites
@@ -97,6 +97,6 @@ def mercadolivre(links, dictSites):
 
                             precoFloat = int(str(precoAdquirido[0]).replace('.', ''))
 
-                            mML.append(f"{precoFloat + (int(cents[0]) / 100):2f}")
+                            mML.append(f"{precoFloat + (int(cents[0]) / 100):.2f}")
 
     return mML, sML
