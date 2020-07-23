@@ -4,12 +4,26 @@ import requests, re
 # <---------------------| Sites Válidos |-------------------->
 
 def sitesFuncionais(links, sites):
+    """
+    Passa os links por um processo de filtragem, e retorna apenas os válidos.
+
+    Args:
+        link - Lista dos links que serão usados na passagem pelo filtro
+        sites - Dicionario que nos values possui os sites usados para a filtragem
+
+    Attributes:
+        sitesUsados - Lista que irá armazenar os sites válidos
+
+    Return:
+        sitesUsados - Lista de todos os sites que passaram pelo filtro
+    """
+
     sitesUsados = []
 
-    for j in links:
-        for l in sites.values():
-            if l in j:
-                sitesUsados.append(j)
+    for link in links:
+        for site in sites.values():
+            if site in link:
+                sitesUsados.append(link)
     
     return sitesUsados
 
@@ -20,6 +34,9 @@ def kabum(links, dictSites):
     mKabum = []
     sKabum = []
 
+    # Filtro dos preços
+    regex = re.compile(r"(\d|\d\d|\d\d\d|\d.\d\d\d|\d\d.\d\d\d),\d\d")
+
     # Para cada link da lista de links
     for i in links:
         # Verifica se o link está certo
@@ -27,9 +44,6 @@ def kabum(links, dictSites):
             # Pega o conteúdo do link
             page = requests.get(i)
             tree = html.fromstring(page.content)
-            
-            # Filtro dos preços
-            regex = re.compile(r"(\d|\d\d|\d\d\d|\d.\d\d\d|\d\d.\d\d\d),\d\d")
 
             # Preços Adiquiridos
             precoAdquirido = tree.xpath("//div[@class = 'preco_normal']/text()")
@@ -56,47 +70,69 @@ def kabum(links, dictSites):
 def mercadolivre(links, dictSites):
     mML = []
     sML = []
-    fodase = []
+    listaProdutos = []
+    count = 0
+    limitador = numInt()
 
     for j in links:
-        if not links.count(j) > 1:
-            if dictSites['Mercado Livre 1'] or dictSites['Mercado Livre 2'] or dictSites['Mercado Livre 3'] or dictSites['Mercado Livre 4'] or dictSites['Mercado Livre 5'] in i:
-                # Pega o conteúdo do link
-                page = requests.get(j)
-                tree = html.fromstring(page.content)
+        if dictSites['Mercado Livre 1'] or dictSites['Mercado Livre 2'] or dictSites['Mercado Livre 3'] or dictSites['Mercado Livre 4'] or dictSites['Mercado Livre 5'] in j:
+            # Pega o conteúdo do link
+            page = requests.get(j)
+            tree = html.fromstring(page.content)
 
-                precoAdquirido = tree.xpath("//span[@class = 'price-tag-fraction']/text()")
-                cents = tree.xpath("//span[@class = 'price-tag-cents-visible']/text()")
+            precoAdquirido = tree.xpath("//span[@class = 'price-tag-fraction']/text()")
+            cents = tree.xpath("//span[@class = 'price-tag-cents-visible']/text()")
 
-                if not cents:
-                    cents = tree.xpath("//span[@class = 'price-tag-cents']/text()") or [0]
+            if not cents:
+                cents = tree.xpath("//span[@class = 'price-tag-cents']/text()") or [0]
 
-                if precoAdquirido:
-                    mML.append(precoAdquirido[0] + (int(cents[0]) / 100))
+            if precoAdquirido:
+                precoFloat = int(str(precoAdquirido[0]).replace('.', ''))
 
+                mML.append(precoFloat + (int(cents[0]) / 100))
 
-                if not precoAdquirido:
-                    mlSites = tree.xpath("//a[@class = 'item-link item__js-link']")
-                    
-                    for pinto in mlSites:
-                        if pinto not in fodase:
-                            fodase.append(pinto.attrib['href'])
+                count += 1
 
-                    for i in fodase:
-                        page2 = requests.get(i)
-                        tree2 = html.fromstring(page2.content)
+                if count == limitador:
+                    return mML, sML
 
-                        precoAdquirido = tree2.xpath("//span[@class = 'price-tag-fraction']/text()")
-                        cents = tree2.xpath("//span[@class = 'price-tag-cents-visible']/text()")
+            else:
+                mlSites = tree.xpath("//a[@class = 'item-link item__js-link']")
+                
+                for hrefLinks in mlSites:
+                    if hrefLinks not in listaProdutos:
+                        listaProdutos.append(hrefLinks.attrib['href'])
 
-                        if not cents:
-                            cents = tree2.xpath("//span[@class = 'price-tag-cents']/text()") or [0]
+                for i in listaProdutos:
+                    page2 = requests.get(i)
+                    tree2 = html.fromstring(page2.content)
 
-                        if precoAdquirido:
-                            sML.append(i)
+                    precoAdquirido = tree2.xpath("//span[@class = 'price-tag-fraction']/text()")
+                    cents = tree2.xpath("//span[@class = 'price-tag-cents-visible']/text()")
 
-                            precoFloat = int(str(precoAdquirido[0]).replace('.', ''))
+                    if not cents:
+                        cents = tree2.xpath("//span[@class = 'price-tag-cents']/text()") or [0]
 
-                            mML.append(f"{precoFloat + (int(cents[0]) / 100):.2f}")
+                    if precoAdquirido:
+                        sML.append(i)
+
+                        precoFloat = int(str(precoAdquirido[0]).replace('.', ''))
+
+                        mML.append(f"{precoFloat + (int(cents[0]) / 100):.2f}")
+
+                        count += 1
+
+                        if count == limitador:
+                            return mML, sML     
 
     return mML, sML
+
+# <---------------------| numInteiro |-------------------->
+
+def numInt():
+    while True:
+        try:
+            limite = int(input("\nQuantos links você deseja adquirir?\n> "))
+            return limite
+        except ValueError:
+            print("Tente novamente.")
