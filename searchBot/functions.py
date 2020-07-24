@@ -8,11 +8,12 @@ def sitesFuncionais(links, sites):
     Passa os links por um processo de filtragem, e retorna apenas os válidos.
 
     Args:
-        link - Lista dos links que serão usados na passagem pelo filtro
+        links - Lista dos links que serão usados na passagem pelo filtro
         sites - Dicionario que nos values possui os sites usados para a filtragem
 
-    Attributes:
-        sitesUsados - Lista que irá armazenar os sites válidos
+    Locals:
+        link - Elemento do arg[links] que passara pela aprovação
+        site - Value que do arg[sites] que será usado para aprovas os links
 
     Return:
         sitesUsados - Lista de todos os sites que passaram pelo filtro
@@ -30,49 +31,80 @@ def sitesFuncionais(links, sites):
 # <---------------------| Kabum |-------------------->
 
 def kabum(links, dictSites):
-    # Listas de preço e sites
-    mKabum = []
-    sKabum = []
+    """
+    Pega o valor dos produtos dos sites da Kabum que forem passados, e os links validos Kabum.
 
-    # Filtro dos preços
+    Args:
+        links - Lista de links que serão analisados
+        dictSites - Dicionário que, em seus values, contem os sites 'Kabum' validos.
+
+    Locals:
+        regex - O 'filtro' dos preços, ira separar os números do resto da string.
+        link - Elemento do arg[links] que passara pela aprovação
+        page - requests.models.Response | Guarda a resposta do site, (ativo, fora de alcançe, etc.)
+        tree - lxml.html.HtmlElement | Possue a informação HTML do site
+        precoAdquirido - Lista que ira conter todos os valores adquiridos na página
+        preco - arg[precoAdquirido] porém agora editado para uma melhor exibiçao
+
+    Return:
+        precoKabum - Lista de todos os preços adquiridos
+        sitesKabum - Lista de todos os sites dos quais foram adquiridos os preços
+    """
+
+    precoKabum = []
+    sitesKabum = []
+
     regex = re.compile(r"(\d|\d\d|\d\d\d|\d.\d\d\d|\d\d.\d\d\d),\d\d")
 
-    # Para cada link da lista de links
-    for i in links:
-        # Verifica se o link está certo
-        if dictSites['Kabum'] in i:
-            # Pega o conteúdo do link
-            page = requests.get(i)
+    for link in links:
+        # Verifica se o link  é da Kabum
+        if dictSites['Kabum'] in link:
+            page = requests.get(link)
             tree = html.fromstring(page.content)
 
-            # Preços Adiquiridos
             precoAdquirido = tree.xpath("//div[@class = 'preco_normal']/text()")
 
             # Caso o anterior dê errado
             if not precoAdquirido:
                 precoAdquirido = tree.xpath("//div[@class = 'preco_antigo-cm']/text()") 
 
-            # Caso algum valor seja obtido
             if precoAdquirido:
                 # Formata ele bunitin
                 preco = regex.search(precoAdquirido[0]).group()
-                valor = float(preco.replace(".", "").replace(",", "."))
+                preco = float(preco.replace(".", "").replace(",", "."))
                 
                 # Add o valor e link pra uma lista
-                mKabum.append(f"{valor:.2f}")
-                sKabum.append(i)
+                precoKabum.append(f"{preco:.2f}")
+                sitesKabum.append(link)
 
-    # Retorna a lista de preços e sites
-    return mKabum, sKabum
+    return precoKabum, sitesKabum
 
 # <---------------------| Mercado Livre |-------------------->
 
 def mercadolivre(links, dictSites):
-    mML = []
-    sML = []
+    """
+    Pega o valor dos produtos dos sites do Mercado Livre que forem passados, e os links validos Mercado Livre.
+
+    Args:
+        links - Lista de links que serão analisados
+        dictSites - Dicionário que, em seus values, contem os sites 'Mercado Livre' validos.
+
+    Locals:
+
+    Return:
+        precoML - Lista que contem todos os preços adquiridos
+        sitesML - Lista de sites que dos quais foram adquiridos os preços
+
+
+    """
+    precoML = []
+    sitesML = []
     listaProdutos = []
-    count = 0
-    limitador = numInt()
+    contador = 0
+    limitador = numInt("\nSite(s) do Mercado Livre encontrados.\nQuantos produtos dejesa obter? [0 ou para obter todos]\n> ")
+
+    if limitador <= 0:
+        limitador = -1
 
     for j in links:
         if dictSites['Mercado Livre 1'] or dictSites['Mercado Livre 2'] or dictSites['Mercado Livre 3'] or dictSites['Mercado Livre 4'] or dictSites['Mercado Livre 5'] in j:
@@ -89,12 +121,12 @@ def mercadolivre(links, dictSites):
             if precoAdquirido:
                 precoFloat = int(str(precoAdquirido[0]).replace('.', ''))
 
-                mML.append(precoFloat + (int(cents[0]) / 100))
+                precoML.append(precoFloat + (int(cents[0]) / 100))
 
-                count += 1
+                contador += 1
 
-                if count == limitador:
-                    return mML, sML
+                if contador == limitador:
+                    return precoML, sitesML
 
             else:
                 mlSites = tree.xpath("//a[@class = 'item-link item__js-link']")
@@ -114,25 +146,42 @@ def mercadolivre(links, dictSites):
                         cents = tree2.xpath("//span[@class = 'price-tag-cents']/text()") or [0]
 
                     if precoAdquirido:
-                        sML.append(i)
+                        sitesML.append(i)
 
                         precoFloat = int(str(precoAdquirido[0]).replace('.', ''))
 
-                        mML.append(f"{precoFloat + (int(cents[0]) / 100):.2f}")
+                        precoML.append(f"{precoFloat + (int(cents[0]) / 100):.2f}")
 
-                        count += 1
+                        contador += 1
 
-                        if count == limitador:
-                            return mML, sML     
+                        if contador == limitador:
+                            return precoML, sitesML     
 
-    return mML, sML
+    return precoML, sitesML
 
-# <---------------------| numInteiro |-------------------->
+# <---------------------| Número Inteiro |-------------------->
 
-def numInt():
+def numInt(msg):
+    """
+    Exibe uma mensagem e faz o usuário, obrigatoriamente, digitar um número inteiro.
+
+    Args:
+        msg - Texto que irá ser exibido
+
+    Attributes:
+        limite - Variavel que espera pelo input de um número do usuário
+
+    Return:
+        limite - Número inteiro que for digitado
+    """
     while True:
         try:
-            limite = int(input("\nQuantos links você deseja adquirir?\n> "))
+            limite = int(input(msg))
             return limite
         except ValueError:
             print("Tente novamente.")
+
+# <---------------------| Menuzinho |-------------------->
+
+def menu():
+    pass
