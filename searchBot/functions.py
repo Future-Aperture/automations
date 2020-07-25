@@ -198,3 +198,17 @@ def aliexpress(links, dictSites):
     preçosAE = []
     linksAE = []
     
+    for link in links:
+        if dictSites['AE'] in link:
+            page = requests.get(link)
+            tree = html.fromstring(page.content)
+            preçoAdquirido = tree.xpath('//div[@class = "product-price-del"]/text()')
+        
+            if preçoAdquirido:
+                preço = regex.search(preçoAdquirido[0]).group()
+                preço = float(preço.replace(".", "").replace(",", "."))
+
+                preçosAE.append(f'{preço:.2f}')
+                linksAE.append(link)
+
+    return preçosAE, linksAE
