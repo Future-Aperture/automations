@@ -26,7 +26,7 @@ while True:
 sitesTXT = ["Kabum", "Mercado Livre"]
 
 # Dict para ser usado nas buscas
-dictSites = {   'AE': 'www.aliexpress.com',
+dictSites = {   'Americanas': 'americanas.com.br',
                 'Kabum': 'www.kabum.com.br',
                 'Mercado Livre 1': 'produto.mercadolivre.com.br',
                 'Mercado Livre 2': 'www.mercadolivre.com.br',
@@ -42,7 +42,7 @@ dictSites = {   'AE': 'www.aliexpress.com',
 busca = input("\nDigite o que você quer buscar:\n> ")
 
 # Quantos links do google ele vai buscar    
-limite = functions.numInt("\nQuantos links do google deseja buscas?\n> ")
+limite = functions.numInt("\nQuantos links do google deseja buscar?\n> ")
     
 # Pega os links da busca
 links = search(query = busca, start = 0, stop = limite, pause = 2)
@@ -55,7 +55,7 @@ sites = functions.sitesFuncionais(links, dictSites)
 # Pega os preços e links dos produtos
 pKabum, lKabum = functions.kabum(sites, dictSites)
 pML, lML = functions.mercadolivre(sites, dictSites)
-pAE, lAE = functions.aliexpress(sites,dictSites)
+pAmericanas, lAmericanas = functions.americanas(sites,dictSites)
 
 
 # Junta todos os preços e links

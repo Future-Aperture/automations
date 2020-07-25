@@ -112,7 +112,7 @@ def mercadolivre(links, dictSites):
 
     for j in links:
         if dictSites['Mercado Livre 1'] or dictSites['Mercado Livre 2'] or dictSites['Mercado Livre 3'] or dictSites['Mercado Livre 4'] or dictSites['Mercado Livre 5'] in j:
-            limitador = numInt("\nSite(s) do Mercado Livre encontrados.\nQuantos produtos dejesa obter? [0 ou para obter todos]\n> ")
+            limitador = numInt("\nSite(s) do Mercado Livre encontrados.\nQuantos produtos deseja obter? [0 ou para obter todos]\n> ")
 
             if limitador <= 0:
                 limitador = -1
@@ -193,22 +193,23 @@ def menu():
     pass   
 
 # => como deve ser os preços
-def aliexpress(links, dictSites):
+def americanas(links, dictSites):
     regex = re.compile(r"(\d|\d\d|\d\d\d|\d.\d\d\d|\d\d.\d\d\d),\d\d")
-    preçosAE = []
-    linksAE = []
+    preçosAmericanas = []
+    linksAmericanas = []
     
     for link in links:
         if dictSites['AE'] in link:
             page = requests.get(link)
             tree = html.fromstring(page.content)
-            preçoAdquirido = tree.xpath('//div[@class = "product-price-del"]/text()')
+            preçoAdquirido = tree.xpath('//span[@class = "PriceUI-bwhjk3-11 jtJOff PriceUI-sc-1q8ynzz-0 dHyYVS TextUI-sc-12tokcy-0 bLZSPZ"]/text()').text()
         
             if preçoAdquirido:
                 preço = regex.search(preçoAdquirido[0]).group()
                 preço = float(preço.replace(".", "").replace(",", "."))
 
-                preçosAE.append(f'{preço:.2f}')
-                linksAE.append(link)
+                preçosAmericanas.append(f'{preço:.2f}')
+                linksAmericanas.append(link)
 
-    return preçosAE, linksAE
+    return preçosAmericanas, linksAmericanas
+
