@@ -5,7 +5,7 @@ import requests, re, functions
 # <---------------------| Path e Arquivo |-------------------->
 
 while True:
-    nomeArquivo = input("Digite o nome que queira dar ao arquivo.\n> ")
+    nomeArquivo = input("Nome do arquivo\n> ")
 
     if not nomeArquivo:
         print("Por favor, digite um nome válido.\n")
