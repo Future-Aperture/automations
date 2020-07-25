@@ -8,15 +8,15 @@ def sitesFuncionais(links, sites):
     Passa os links por um processo de filtragem, e retorna apenas os válidos.
 
     Args:
-        links - Lista dos links que serão usados na passagem pelo filtro
-        sites - Dicionario que nos values possui os sites usados para a filtragem
+        links:list: - Lista dos links que serão usados na passagem pelo filtro
+        sites:dict: - Dicionario que nos values possui os sites usados para a filtragem
 
     Locals:
-        link - Elemento do arg[links] que passara pela aprovação
-        site - Value que do arg[sites] que será usado para aprovas os links
+        link:string: - Elemento do arg[links] que passara pela aprovação
+        site:string: - Value que do arg[sites] que será usado para aprovas os links
 
     Return:
-        sitesUsados - Lista de todos os sites que passaram pelo filtro
+        sitesUsados:list: - Lista de todos os sites que passaram pelo filtro
     """
 
     sitesUsados = []
@@ -35,20 +35,20 @@ def kabum(links, dictSites):
     Pega o valor dos produtos dos sites da Kabum que forem passados, e os links validos Kabum.
 
     Args:
-        links - Lista de links que serão analisados
-        dictSites - Dicionário que, em seus values, contem os sites 'Kabum' validos.
+        links:list: - Lista de links que serão analisados
+        dictSites:dict: - Dicionário que, em seus values, contem os sites 'Kabum' validos.
 
     Locals:
-        regex - O 'filtro' dos preços, ira separar os números do resto da string.
-        link - Elemento do arg[links] que passara pela aprovação
-        page - requests.models.Response | Guarda a resposta do site, (ativo, fora de alcançe, etc.)
-        tree - lxml.html.HtmlElement | Possue a informação HTML do site
-        precoAdquirido - Lista que ira conter todos os valores adquiridos na página
-        preco - arg[precoAdquirido] porém agora editado para uma melhor exibiçao
+        regex:pattern: - O 'filtro' dos preços, ira separar os números do resto da string.
+        link:string: - Elemento do arg[links] que passara pela aprovação
+        page:requests.models.Response: - Guarda a resposta do site
+        tree:lxml.html.HtmlElement: - Possue a informação HTML do site
+        precoAdquirido:list: - Lista que ira conter todos os valores adquiridos na página
+        preco:string: - local[precoAdquirido] porém agora editado para uma melhor exibiçao
 
     Return:
-        precoKabum - Lista de todos os preços adquiridos
-        sitesKabum - Lista de todos os sites dos quais foram adquiridos os preços
+        precoKabum:list: - Lista de todos os preços adquiridos
+        sitesKabum:list: - Lista de todos os sites dos quais foram adquiridos os preços
     """
 
     precoKabum = []
@@ -86,28 +86,37 @@ def mercadolivre(links, dictSites):
     Pega o valor dos produtos dos sites do Mercado Livre que forem passados, e os links validos Mercado Livre.
 
     Args:
-        links - Lista de links que serão analisados
-        dictSites - Dicionário que, em seus values, contem os sites 'Mercado Livre' validos.
+        links:list: - Lista de links que serão analisados
+        dictSites:dict: - Dicionário que, em seus values, contem os sites 'Mercado Livre' validos.
 
     Locals:
+        contador:int: - Contador de quantos produtos foram adquiridos
+        limitador:int: -  Limita quandidade de produtos adquiridos
+        page | page2 :requests.models.Response: - Guarda a resposta do site
+        tree | tree2 :lxml.html.HtmlElement: - Possue a informação HTML do site
+        precoAdquirido:list: - Lista que ira conter todos os valores adquiridos na página
+        cents:list: - Lista que ira conter todos os valores adquiridos na página
+        precoFloat:int: - Valor que contem o preço da junção de local[precoAdquirido] e local[cents]
+        hrefLinks:str: - String do(s) site(s) adquirido(s) da href 
+        listaProdutos:lst: Lista contendo todos os local[hrefLinks] válidos
 
     Return:
-        precoML - Lista que contem todos os preços adquiridos
-        sitesML - Lista de sites que dos quais foram adquiridos os preços
-
-
+        precoML:list: - Lista que contem todos os preços adquiridos
+        sitesML:list: - Lista de sites que dos quais foram adquiridos os preços
     """
+
     precoML = []
     sitesML = []
     listaProdutos = []
     contador = 0
-    limitador = numInt("\nSite(s) do Mercado Livre encontrados.\nQuantos produtos dejesa obter? [0 ou para obter todos]\n> ")
-
-    if limitador <= 0:
-        limitador = -1
 
     for j in links:
         if dictSites['Mercado Livre 1'] or dictSites['Mercado Livre 2'] or dictSites['Mercado Livre 3'] or dictSites['Mercado Livre 4'] or dictSites['Mercado Livre 5'] in j:
+            limitador = numInt("\nSite(s) do Mercado Livre encontrados.\nQuantos produtos dejesa obter? [0 ou para obter todos]\n> ")
+
+            if limitador <= 0:
+                limitador = -1
+            
             # Pega o conteúdo do link
             page = requests.get(j)
             tree = html.fromstring(page.content)
@@ -166,13 +175,10 @@ def numInt(msg):
     Exibe uma mensagem e faz o usuário, obrigatoriamente, digitar um número inteiro.
 
     Args:
-        msg - Texto que irá ser exibido
-
-    Attributes:
-        limite - Variavel que espera pelo input de um número do usuário
+        msg:str:Texto que irá ser exibido
 
     Return:
-        limite - Número inteiro que for digitado
+        limite:int:Número inteiro que for digitado
     """
     while True:
         try:
