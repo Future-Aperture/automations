@@ -11,7 +11,8 @@ dictSites = {   'Mercado Livre 1': 'produto.mercadolivre.com.br',
                 'Mercado Livre 3': 'lista.mercadolivre.com.br',
                 'Mercado Livre 4': 'informatica.mercadolivre.com.br',
                 'Mercado Livre 5': 'loja.mercadolivre.com.br',
-                'Kabum': 'www.kabum.com.br'}
+                'Kabum': 'www.kabum.com.br'
+                'Aliexpress'}
 
 # <---------------------||-------------------->
 
