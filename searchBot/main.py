@@ -17,6 +17,7 @@ while True:
         arquivo = open(f"{path}\\{nomeArquivo}.txt", "x")
         arquivo.close()
         break
+    
     except:
         print("Path incorreto, por favor tente novamente.\n")
 
@@ -59,8 +60,8 @@ pAmericanas, lAmericanas = functions.americanas(sites,dictSites)
 
 
 # Junta todos os preços e links
-todosPreco = (pKabum, pML)
-todosLinks = (lKabum, lML)
+todosPreco = (pKabum, pML,pAmericanas)
+todosLinks = (lKabum, lML,lAmericanas)
 
 # <---------------------| Debug |-------------------->
 

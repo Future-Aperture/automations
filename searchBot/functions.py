@@ -118,7 +118,12 @@ def mercadolivre(links, dictSites):
                 limitador = -1
             
             # Pega o conteúdo do link
-            page = requests.get(j)
+            try:
+                page = requests.get(j) # AQUI DE ERRO
+            except:
+                page = requests.get(j)
+                print('Deu erro moço')
+
             tree = html.fromstring(page.content)
 
             precoAdquirido = tree.xpath("//span[@class = 'price-tag-fraction']/text()")
@@ -195,14 +200,18 @@ def menu():
 # => como deve ser os preços
 def americanas(links, dictSites):
     regex = re.compile(r"(\d|\d\d|\d\d\d|\d.\d\d\d|\d\d.\d\d\d),\d\d")
-    preçosAmericanas = []
-    linksAmericanas = []
+    preçosAmericanas = [ ]
+    linksAmericanas = [ ]
     
     for link in links:
-        if dictSites['AE'] in link:
-            page = requests.get(link)
+        if dictSites['Americanas'] in link:
+            try:
+                page = requests.get(link)
+            except:
+                print('Erro no request')
+
             tree = html.fromstring(page.content)
-            preçoAdquirido = tree.xpath('//span[@class = "PriceUI-bwhjk3-11 jtJOff PriceUI-sc-1q8ynzz-0 dHyYVS TextUI-sc-12tokcy-0 bLZSPZ"]/text()').text()
+            preçoAdquirido = tree.xpath('//span[@class = "sales-price main-offer__SalesPrice-sc-1oo1w8r-1 ivAJsH TextUI-sc-12tokcy-0 bLZSPZ"]/text()').text()
         
             if preçoAdquirido:
                 preço = regex.search(preçoAdquirido[0]).group()
