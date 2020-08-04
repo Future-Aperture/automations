@@ -1,7 +1,6 @@
 from lxml import html
 from googlesearch import search
-import requests, re
-import functions
+import requests, re, functions
 
 # <---------------------| Path e Arquivo |-------------------->
 
@@ -17,7 +16,6 @@ while True:
         arquivo = open(f"{path}\\{nomeArquivo}.txt", "x")
         arquivo.close()
         break
-    
     except:
         print("Path incorreto, por favor tente novamente.\n")
 
@@ -27,14 +25,15 @@ while True:
 sitesTXT = ["Kabum", "Mercado Livre"]
 
 # Dict para ser usado nas buscas
-dictSites = {   'Americanas': 'americanas.com.br',
+dictSites = {   
                 'Kabum': 'www.kabum.com.br',
                 'Mercado Livre 1': 'produto.mercadolivre.com.br',
                 'Mercado Livre 2': 'www.mercadolivre.com.br',
                 'Mercado Livre 3': 'lista.mercadolivre.com.br',
                 'Mercado Livre 4': 'informatica.mercadolivre.com.br',
-                'Mercado Livre 5': 'loja.mercadolivre.com.br'
-                
+                'Mercado Livre 5': 'loja.mercadolivre.com.br',
+                'Mercado Livre 6': 'esportes.mercadolivre.com.br',
+                'Mercado Livre 7': 'celulares.mercadolivre.com.br'
                 }
 
 # <---------------------| Sites Usados |-------------------->
@@ -45,6 +44,7 @@ busca = input("\nDigite o que você quer buscar:\n> ")
 # Quantos links do google ele vai buscar    
 limite = functions.numInt("\nQuantos links do google deseja buscar?\n> ")
     
+
 # Pega os links da busca
 links = search(query = busca, start = 0, stop = limite, pause = 2)
 
@@ -56,18 +56,16 @@ sites = functions.sitesFuncionais(links, dictSites)
 # Pega os preços e links dos produtos
 pKabum, lKabum = functions.kabum(sites, dictSites)
 pML, lML = functions.mercadolivre(sites, dictSites)
-pAmericanas, lAmericanas = functions.americanas(sites,dictSites)
-
 
 # Junta todos os preços e links
-todosPreco = (pKabum, pML,pAmericanas)
-todosLinks = (lKabum, lML,lAmericanas)
+todosPreco = (pKabum, pML)
+todosLinks = (lKabum, lML)
 
 # <---------------------| Debug |-------------------->
 
-
+# print(pML)
+# print(lML)
 print()
-print("DEU CERTO!!!!!!!!!!!!!!!")
 
 # <---------------------| Arquivo de Texto |-------------------->
 
@@ -85,5 +83,4 @@ Link: {todosLinks[p][i]}
 
 arquivo.close()
 
-print()
 input("Programa finalizado, precione ENTER para fechar.")

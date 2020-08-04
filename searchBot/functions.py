@@ -6,15 +6,12 @@ import requests, re
 def sitesFuncionais(links, sites):
     """
     Passa os links por um processo de filtragem, e retorna apenas os válidos.
-
     Args:
         links:list: - Lista dos links que serão usados na passagem pelo filtro
         sites:dict: - Dicionario que nos values possui os sites usados para a filtragem
-
     Locals:
         link:string: - Elemento do arg[links] que passara pela aprovação
         site:string: - Value que do arg[sites] que será usado para aprovas os links
-
     Return:
         sitesUsados:list: - Lista de todos os sites que passaram pelo filtro
     """
@@ -33,11 +30,9 @@ def sitesFuncionais(links, sites):
 def kabum(links, dictSites):
     """
     Pega o valor dos produtos dos sites da Kabum que forem passados, e os links validos Kabum.
-
     Args:
         links:list: - Lista de links que serão analisados
         dictSites:dict: - Dicionário que, em seus values, contem os sites 'Kabum' validos.
-
     Locals:
         regex:pattern: - O 'filtro' dos preços, ira separar os números do resto da string.
         link:string: - Elemento do arg[links] que passara pela aprovação
@@ -45,7 +40,6 @@ def kabum(links, dictSites):
         tree:lxml.html.HtmlElement: - Possue a informação HTML do site
         precoAdquirido:list: - Lista que ira conter todos os valores adquiridos na página
         preco:string: - local[precoAdquirido] porém agora editado para uma melhor exibiçao
-
     Return:
         precoKabum:list: - Lista de todos os preços adquiridos
         sitesKabum:list: - Lista de todos os sites dos quais foram adquiridos os preços
@@ -84,11 +78,9 @@ def kabum(links, dictSites):
 def mercadolivre(links, dictSites):
     """
     Pega o valor dos produtos dos sites do Mercado Livre que forem passados, e os links validos Mercado Livre.
-
     Args:
         links:list: - Lista de links que serão analisados
         dictSites:dict: - Dicionário que, em seus values, contem os sites 'Mercado Livre' validos.
-
     Locals:
         contador:int: - Contador de quantos produtos foram adquiridos
         limitador:int: -  Limita quandidade de produtos adquiridos
@@ -99,7 +91,6 @@ def mercadolivre(links, dictSites):
         precoFloat:int: - Valor que contem o preço da junção de local[precoAdquirido] e local[cents]
         hrefLinks:str: - String do(s) site(s) adquirido(s) da href 
         listaProdutos:lst: Lista contendo todos os local[hrefLinks] válidos
-
     Return:
         precoML:list: - Lista que contem todos os preços adquiridos
         sitesML:list: - Lista de sites que dos quais foram adquiridos os preços
@@ -111,19 +102,14 @@ def mercadolivre(links, dictSites):
     contador = 0
 
     for j in links:
-        if dictSites['Mercado Livre 1'] or dictSites['Mercado Livre 2'] or dictSites['Mercado Livre 3'] or dictSites['Mercado Livre 4'] or dictSites['Mercado Livre 5'] in j:
-            limitador = numInt("\nSite(s) do Mercado Livre encontrados.\nQuantos produtos deseja obter? [0 ou para obter todos]\n> ")
+        if dictSites['Mercado Livre 1'] or dictSites['Mercado Livre 2'] or dictSites['Mercado Livre 3'] or dictSites['Mercado Livre 4'] or dictSites['Mercado Livre 5'] or dictSites['Mercado Livre 6'] or dictSites['Mercado Livre 7'] in j:
+            limitador = numInt("\nSite(s) encontrados.\nQuantos produtos deseja obter? [0 ou para obter todos]\n> ")
 
             if limitador <= 0:
                 limitador = -1
             
             # Pega o conteúdo do link
-            try:
-                page = requests.get(j) # AQUI DE ERRO
-            except:
-                page = requests.get(j)
-                print('Deu erro moço')
-
+            page = requests.get(j)
             tree = html.fromstring(page.content)
 
             precoAdquirido = tree.xpath("//span[@class = 'price-tag-fraction']/text()")
@@ -178,10 +164,8 @@ def mercadolivre(links, dictSites):
 def numInt(msg):
     """
     Exibe uma mensagem e faz o usuário, obrigatoriamente, digitar um número inteiro.
-
     Args:
         msg:str:Texto que irá ser exibido
-
     Return:
         limite:int:Número inteiro que for digitado
     """
@@ -192,33 +176,9 @@ def numInt(msg):
         except ValueError:
             print("Tente novamente.")
 
-# <---------------------| Menuzinho |-------------------->
+# <---------------------| menu|-------------------->
 
 def menu():
-    pass   
+    pass
 
-# => como deve ser os preços
-def americanas(links, dictSites):
-    regex = re.compile(r"(\d|\d\d|\d\d\d|\d.\d\d\d|\d\d.\d\d\d),\d\d")
-    preçosAmericanas = [ ]
-    linksAmericanas = [ ]
-    
-    for link in links:
-        if dictSites['Americanas'] in link:
-            try:
-                page = requests.get(link)
-            except:
-                print('Erro no request')
-
-            tree = html.fromstring(page.content)
-            preçoAdquirido = tree.xpath('//span[@class = "sales-price main-offer__SalesPrice-sc-1oo1w8r-1 ivAJsH TextUI-sc-12tokcy-0 bLZSPZ"]/text()').text()
-        
-            if preçoAdquirido:
-                preço = regex.search(preçoAdquirido[0]).group()
-                preço = float(preço.replace(".", "").replace(",", "."))
-
-                preçosAmericanas.append(f'{preço:.2f}')
-                linksAmericanas.append(link)
-
-    return preçosAmericanas, linksAmericanas
-
+         
