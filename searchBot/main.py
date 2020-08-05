@@ -1,7 +1,7 @@
 from lxml import html
 from googlesearch import search
 import requests, re, functions
-
+import googlesearch
 # <---------------------| Path e Arquivo |-------------------->
 
 while True:
